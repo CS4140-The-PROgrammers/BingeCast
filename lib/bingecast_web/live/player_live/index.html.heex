@@ -1,0 +1,76 @@
+<section class="audio-player">
+  <h1>Audio Player Test</h1>
+  <button id="play-pause-button">Play</button> <!-- Single toggle button -->
+  <input type="range" id="seekbar" min="0" max="100" value="0" step="1">
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      console.log("Initializing audio player...");
+
+      // Create a persistent Howl instance
+      const sound = new Howl({
+        src: ["/sounds/song.mp3"],  // Ensure the path is correct
+        html5: true,                // Use HTML5 Audio for streaming support
+        volume: 1.0,
+        preload: true,
+        onload: () => console.log("Audio loaded successfully."),
+        onloaderror: (id, error) => console.error("Audio load error:", error),
+        onplayerror: (id, error) => console.error("Audio play error:", error),
+      });
+
+      const playPauseButton = document.getElementById("play-pause-button");
+      const seekBar = document.getElementById("seekbar");
+
+      let isPlaying = false;  // Track if audio is playing
+
+      // Toggle Play/Pause button
+      playPauseButton.addEventListener("click", () => {
+        if (!isPlaying) {
+          console.log("Playing audio...");
+          sound.play();
+        } else {
+          console.log("Pausing audio...");
+          sound.pause();
+        }
+      });
+
+      // Update the button text when the audio plays
+      sound.on("play", () => {
+        console.log("Audio is now playing.");
+        isPlaying = true;
+        playPauseButton.textContent = "Pause";  // Change button text to "Pause"
+        requestAnimationFrame(updateSeekBar);
+      });
+
+      // Update the button text when the audio pauses or ends
+      sound.on("pause", () => {
+        console.log("Audio paused.");
+        isPlaying = false;
+        playPauseButton.textContent = "Play";  // Change button text to "Play"
+      });
+
+      sound.on("end", () => {
+        console.log("Audio finished.");
+        isPlaying = false;
+        playPauseButton.textContent = "Play";  // Reset to "Play" when finished
+      });
+
+      // Update the seek bar as the audio plays
+      function updateSeekBar() {
+        const progress = (sound.seek() / sound.duration()) * 100;
+        seekBar.value = progress;
+
+        if (sound.playing()) {
+          requestAnimationFrame(updateSeekBar);
+        }
+      }
+
+      // Allow seeking to a new position in the audio
+      seekBar.addEventListener("input", (e) => {
+        const seekTo = (e.target.value / 100) * sound.duration();
+        console.log(`Seeking to: ${seekTo}`);
+        sound.seek(seekTo);
+      });
+    });
+  </script>
+</section>
