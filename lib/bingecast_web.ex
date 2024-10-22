@@ -57,6 +57,9 @@ defmodule BingecastWeb do
       unquote(html_helpers())
     end
   end
+  def static_paths do
+   ~w(assets fonts images favicon.ico robots.txt sounds)
+  end
 
   def live_component do
     quote do
