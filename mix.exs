@@ -35,6 +35,8 @@ defmodule Bingecast.MixProject do
       {:bcrypt_elixir, "~> 3.0"},
       {:phoenix, "~> 1.7.14"},
       {:phoenix_ecto, "~> 4.5"},
+      # for CORS integration
+      {:cors_plug, "~> 3.0.3"},
       {:ecto_sql, "~> 3.10"},
       {:ecto_sqlite3, ">= 0.0.0"},
       {:phoenix_html, "~> 4.1"},

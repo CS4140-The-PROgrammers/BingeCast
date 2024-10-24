@@ -15,15 +15,33 @@ defmodule BingecastWeb.Endpoint do
     websocket: [connect_info: [session: @session_options]],
     longpoll: [connect_info: [session: @session_options]]
 
+  plug CORSPlug,
+   origin: ["http://localhost:3000"],
+   headers: [
+       "x-auth",
+       "Authorization",
+       "Content-Type",
+       "Accept",
+       "Origin",
+       "User-Agent",
+       "DNT",
+       "Cache-Control",
+       "X-Mx-ReqToken",
+       "Keep-Alive",
+       "X-Requested-With",
+       "If-Modified-Since",
+       "X-CSRF-Token"
+      ]
+
   # Serve at "/" the static files from "priv/static" directory.
   #
   # You should set gzip to true if you are running phx.digest
   # when deploying your static files in production.
  plug Plug.Static,
   at: "/",
-  from: {:bingecast, "priv/static"},
+  from: :bingecast,
   gzip: false,
-  only: ~w(assets fonts images js sounds favicon.ico robots.txt)
+  only: BingecastWeb.static_paths()
 
 
   # Code reloading can be explicitly enabled under the

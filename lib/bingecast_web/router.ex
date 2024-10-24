@@ -17,19 +17,22 @@ defmodule BingecastWeb.Router do
     plug :accepts, ["json"]
   end
 
+
   scope "/", BingecastWeb do
     pipe_through :browser
 
     get "/", PageController, :home
 
     # Add the new route for the PlayerLive view
-    live "/player", PlayerLive.Index, :index
+  #  live "/player", PlayerLive.Index, :index
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", BingecastWeb do
-  #   pipe_through :api
-  # end
+  scope "/api", BingecastWeb do
+    pipe_through :api
+
+    post "/session", ApiSessionController, :create
+
+  end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
   if Application.compile_env(:bingecast, :dev_routes) do
